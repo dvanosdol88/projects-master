@@ -25,6 +25,10 @@
 3️⃣ **Strategic Plan for Testing and Monitoring**  
 - Next phase to focus on TESTING every interaction.
 - Build orchestration script + monitoring tools once test coverage is complete.
+4️⃣ **Command-Line Interface Added**
+- `jack_cli.py` lets us add tasks, list tasks, and check health.
+- See `docs/jack_usage.md` for instructions.
+
 
 ## Goals and Roles Going Forward (JCC)
 
