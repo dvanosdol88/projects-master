@@ -1,54 +1,36 @@
-
-# JCC Project Summary and Framework
-
-**Date:** 2025-06-27
+# JACK Project Summary and Framework
+**Date:** 2025-06-27  
+**Updated:** 2025-06-29 – project renamed from JCC to **JACK**
 
 ## Project Goals
-
-- Establish robust AI-to-AI communication framework between two agents: CC and Jules (now collectively referred to as **JCC**).
-- Enable task handoffs, shared context, and status reporting between JCC agents via HTTP APIs.
-- Build scalable foundation for orchestration, monitoring, and mission control.
+- Establish a robust AI-to-AI framework between two agents: **Jules** (Flask API) and **Claude Code**—together called **JACK**.  
+- Enable task hand-offs, shared context, and status reporting between JACK agents via HTTP.  
+- Build a scalable foundation for orchestration, monitoring, and mission control.
 
 ## What We Have Done So Far
+1️⃣ **Flask API (Jules)**  
+   Endpoints: `POST /add_task`, `GET /tasks`, `GET /health` (public via ngrok).
 
-1️⃣ **Flask API Built (Jules)**  
-- Task endpoints:
-  - `POST /add_task`
-  - `GET /tasks`
-  - `GET /health`
-- Public exposure via ngrok using `run_claude.sh`.
+2️⃣ **Conceptual framework** for AI-to-AI communication—next steps include richer message types and session management.
 
-2️⃣ **Conceptual Framework for AI-to-AI Communication**  
-- Use HTTP requests to push/pull tasks.
-- Claude suggestion: expand beyond tasks into message types, session management, status polling, and file sharing.
+3️⃣ **Testing & monitoring plan** drafted; focus is to test every interaction before adding orchestration tools.
 
-3️⃣ **Strategic Plan for Testing and Monitoring**  
-- Next phase to focus on TESTING every interaction.
-- Build orchestration script + monitoring tools once test coverage is complete.
-4️⃣ **Command-Line Interface Added**
-- `jack_cli.py` lets us add tasks, list tasks, and check health.
-- See `docs/jack_usage.md` for instructions.
+4️⃣ **Command-Line Interface added**  
+   `jack_cli.py` lets us add tasks, list tasks, and check health (see `docs/jack_usage.md`).
 
-
-## Goals and Roles Going Forward (JCC)
-
-- **JCC Mission:** Seamless, reliable, trackable AI-to-AI collaboration supporting complex workflows.
-- **Jules:** Currently hosts Flask API, manages task queue and health/status endpoints.
-- **CC:** Potential test harness / external controller to send/receive tasks and orchestrate communication with Jules.
-- **JCC (Together):** System for reliable handoff, status updates, and error reporting in multi-AI projects.
+## Roles Going Forward
+- **Jules** – hosts Flask API, manages task queue & health.  
+- **Claude Code** – external controller for tests and orchestration.  
+- **JACK (together)** – seamless, reliable, trackable AI collaboration.
 
 ## Next Steps (Priorities)
+✅ **Priority #1** Document current state (this doc)  
+✅ **Priority #2** Create rigorous test framework  
+🔜 **After testing** Add monitoring & mission-control interface
 
-✅ **Priority #1:** Document current state (this doc).  
-✅ **Priority #2:** TEST framework rigorously:
-   - Endpoint availability
-   - Task creation, retrieval, and deletion
-   - Health checks
-   - Network error handling
-   - Async handoffs and status update flows
-
-🔜 **After Testing:** Build Monitoring Setup + Mission Controller interface.
+## CLI Utility
+A new script `jack_cli.py` provides a lightweight command-line interface to
+interact with Jules’ API. See `docs/jack_usage.md` for usage details.
 
 ---
-
 **End of Summary**
