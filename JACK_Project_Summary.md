@@ -8,10 +8,15 @@
 - Build a scalable foundation for orchestration, monitoring, and mission control.
 
 ## What We Have Done So Far
-1. **Flask API (Jules)**  
+1️⃣ **Flask API (Jules)**  
    Endpoints: `POST /add_task`, `GET /tasks`, `GET /health` (public via ngrok).
-2. **Conceptual framework** for AI-to-AI communication—next steps include richer message types and session management.
-3. **Testing & monitoring plan** drafted; focus is to test every interaction before adding orchestration tools.
+
+2️⃣ **Conceptual framework** for AI-to-AI communication—next steps include richer message types and session management.
+
+3️⃣ **Testing & monitoring plan** drafted; focus is to test every interaction before adding orchestration tools.
+
+4️⃣ **Command-Line Interface added**  
+   `jack_cli.py` lets us add tasks, list tasks, and check health (see `docs/jack_usage.md`).
 
 ## Roles Going Forward
 - **Jules** – hosts Flask API, manages task queue & health.  
@@ -24,8 +29,8 @@
 🔜 **After testing** Add monitoring & mission-control interface
 
 ## CLI Utility
-A new script `jack_cli.py` provides a lightweight command-line interface to interact with Jules’ API.  
-See **`docs/jack_usage.md`** for usage details.
+A new script `jack_cli.py` provides a lightweight command-line interface to
+interact with Jules’ API. See `docs/jack_usage.md` for usage details.
 
 ---
 **End of Summary**

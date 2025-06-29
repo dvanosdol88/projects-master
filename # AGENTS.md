@@ -45,3 +45,6 @@ This repo is shared by JACK (Jules + Claude Code). JACK coordinates tasks, updat
 
 - Build automation to sync ChatGPT session outputs into `docs/`
 - Possibly auto-update `todo.md` with new priorities and reminders
+
+## CLI
+- `jack_cli.py` script for task management via Jules API. See `docs/jack_usage.md`.
