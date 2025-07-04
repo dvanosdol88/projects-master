@@ -1,17 +1,23 @@
-from flask import Flask, request, jsonify
+import datetime
+import json
 from pathlib import Path
-import datetime, json
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 BASE = Path(__file__).parent
+(BASE / "shared").mkdir(exist_ok=True)
 TASKS_FILE = BASE / "shared" / "tasks.json"
+
 
 def _now():
     return datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
+
 @app.route("/health")
 def health():
     return {"status": "ok", "server_time": _now()}
+
 
 @app.route("/add_task", methods=["POST"])
 def add_task():
@@ -25,10 +31,12 @@ def add_task():
     TASKS_FILE.write_text(json.dumps(tasks, indent=2))
     return {"message": f"queued {task!r}", "total_tasks": len(tasks)}, 201
 
+
 @app.route("/tasks")
 def list_tasks():
     tasks = json.loads(TASKS_FILE.read_text()) if TASKS_FILE.exists() else []
     return jsonify(tasks)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
