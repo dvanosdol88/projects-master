@@ -1,4 +1,6 @@
-import subprocess, sys, pathlib
+import subprocess
+import sys
+import pathlib
 
 CLI = pathlib.Path(__file__).parent.parent / "jack_cli.py"
 

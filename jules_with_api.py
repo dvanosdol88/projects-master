@@ -2,9 +2,14 @@
 Combined file-poller + Flask API.
 Run:  python jules_with_api.py
 """
-import threading, time, json, datetime
+import threading
+import time
+import json
+import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify
+from flask import Flask
+from flask import request
+from flask import jsonify
 
 BASE = Path(__file__).parent
 SHARED = BASE / "shared"
