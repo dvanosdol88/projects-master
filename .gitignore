@@ -1,0 +1,11 @@
+# Ignore Python virtual environments
+a2a-env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore other common temporary files
+*.log
+*.swp
+*.swo
