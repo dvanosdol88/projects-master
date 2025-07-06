@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #0f62fe;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+#sidebar {
+  width: 200px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 80px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+
+#sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar li {
+  margin: 0;
+}
+
+#sidebar a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+#sidebar a:hover {
+  background-color: #f0f0f0;
+}
+
+#content {
+  margin-left: 200px;
+  padding: 80px 1rem 1rem;
+  flex-grow: 1;
+}
+
+section {
+  margin-bottom: 2rem;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#task-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+#task-list li span {
+  flex-grow: 1;
+}
+
+.delete-btn {
+  border: none;
+  background: none;
+  color: #0f62fe;
+  cursor: pointer;
+}
