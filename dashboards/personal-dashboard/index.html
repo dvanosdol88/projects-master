@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>My Dashboard</h1>
+        <nav>
+            <button id="toggle-menu">☰</button>
+        </nav>
+    </header>
+    <aside id="sidebar" class="hidden">
+        <ul>
+            <li><a href="#tasks">Tasks</a></li>
+            <li><a href="#notes">Notes</a></li>
+            <li><a href="#calendar">Calendar</a></li>
+        </ul>
+    </aside>
+    <main>
+        <section id="tasks">
+            <h2>Tasks</h2>
+            <form id="task-form">
+                <input type="text" id="task-input" placeholder="New task" required>
+                <button type="submit">Add</button>
+            </form>
+            <ul id="task-list"></ul>
+        </section>
+        <section id="notes">
+            <h2>Notes</h2>
+            <textarea id="notes-area" placeholder="Write your notes here..."></textarea>
+        </section>
+        <section id="calendar">
+            <h2>Calendar</h2>
+            <p>Coming soon...</p>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
