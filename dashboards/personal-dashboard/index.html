@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>My Dashboard</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#tasks">Tasks</a></li>
+            <li><a href="#notes">Notes</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="schedule" class="card">
+            <h2>Today's Schedule</h2>
+            <ul id="schedule-list"></ul>
+        </section>
+        <section id="tasks" class="card">
+            <h2>To-Do List</h2>
+            <ul id="task-list"></ul>
+            <input id="task-input" placeholder="Add task" />
+            <button id="add-task">Add</button>
+        </section>
+        <section id="notes" class="card">
+            <h2>Quick Notes</h2>
+            <textarea id="notes-area" placeholder="Write a note..."></textarea>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
