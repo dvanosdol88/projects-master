@@ -9,3 +9,6 @@ __pycache__/
 *.log
 *.swp
 *.swo
+
+# Environment files
+.env
