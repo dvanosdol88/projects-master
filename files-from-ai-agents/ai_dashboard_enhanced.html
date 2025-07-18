@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Dashboard - dvo88.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        
+        .dashboard-header h1 {
+            color: #00D4FF;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .last-update {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .agent-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+        
+        .agent-card.active {
+            border-color: #00FF88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        .agent-card.idle {
+            opacity: 0.6;
+            border-color: #666;
+        }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .claude-avatar {
+            background: linear-gradient(135deg, #00D4FF, #0099CC);
+        }
+        
+        .codex-avatar {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        }
+        
+        .jules-avatar {
+            background: linear-gradient(135deg, #00FF88, #00CC66);
+        }
+        
+        .agent-name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .agent-type {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #00FF88;
+            color: #000;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-idle {
+            background: #666;
+            color: #fff;
+        }
+        
+        .status-error {
+            background: #FF0055;
+            color: #fff;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .task-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .task-title {
+            font-size: 14px;
+            color: #00D4FF;
+            margin-bottom: 8px;
+        }
+        
+        .task-description {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .task-source {
+            color: #FFB700;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #00D4FF;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Modal styles for agent details */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: #111;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .close {
+            color: #888;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #fff;
+        }
+        
+        .agent-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 30px;
+        }
+        
+        .detail-info h2 {
+            color: #00D4FF;
+            margin-bottom: 5px;
+        }
+        
+        .task-history {
+            margin-top: 30px;
+        }
+        
+        .task-history h3 {
+            color: #00D4FF;
+            margin-bottom: 20px;
+        }
+        
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #00D4FF;
+        }
+        
+        .history-item.completed {
+            border-left-color: #00FF88;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .history-time {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .history-source {
+            color: #FFB700;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .history-description {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .system-stats {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00D4FF;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .activity-log {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-log h3 {
+            color: #00D4FF;
+            margin-bottom: 15px;
+        }
+        
+        .log-entry {
+            padding: 8px;
+            border-bottom: 1px solid #222;
+            font-size: 13px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .log-time {
+            color: #666;
+            min-width: 60px;
+        }
+        
+        .log-agent {
+            color: #00D4FF;
+            min-width: 100px;
+        }
+        
+        .log-message {
+            color: #ccc;
+        }
+        
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #00D4FF;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #00A6CC;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>🤖 AI Agent Dashboard</h1>
+        <div class="last-update">Last updated: <span id="lastUpdate"></span></div>
+    </div>
+    
+    <div class="system-stats">
+        <h3>System Overview</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalAgents">0</div>
+                <div class="stat-label">Total Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeAgents">0</div>
+                <div class="stat-label">Active Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="tasksCompleted">0</div>
+                <div class="stat-label">Tasks Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="tasksInProgress">0</div>
+                <div class="stat-label">Tasks In Progress</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="agent-grid" id="agentGrid">
+        <!-- Agent cards will be dynamically inserted here -->
+    </div>
+    
+    <div class="activity-log">
+        <h3>Recent Activity</h3>
+        <div id="activityLog">
+            <!-- Log entries will be dynamically inserted here -->
+        </div>
+    </div>
+    
+    <!-- Modal for agent details -->
+    <div id="agentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent">
+                <!-- Agent details will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <button class="refresh-btn" onclick="refreshDashboard()">🔄 Refresh</button>
+    
+    <script>
+        // Enhanced agent data with task sources
+        const agents = [
+            {
+                id: 'ubuntu-claude',
+                name: 'Ubuntu Claude (UC)',
+                type: 'Claude Instance',
+                avatar: 'UC',
+                avatarClass: 'claude-avatar',
+                status: 'active',
+                currentTask: {
+                    title: 'AI Agent Dashboard Enhancement',
+                    description: 'Adding click functionality, task sources, and deployment preparation for ai-dashboard.dvo88.com',
+                    progress: 45.7,
+                    startTime: new Date(),
+                    source: 'David (Direct Request)'
+                },
+                taskHistory: [
+                    {
+                        title: 'Personal Dashboard Priority',
+                        description: 'Redirected team focus to Personal Dashboard improvements',
+                        completed: true,
+                        time: '18:22',
+                        source: 'David (Direct Request)'
+                    },
+                    {
+                        title: 'Graphics Toolkit Integration',
+                        description: 'Integrated Claude Web\'s design toolkit for better animations',
+                        completed: true,
+                        time: '18:00',
+                        source: 'David (via Claude Web)'
+                    }
+                ]
+            },
+            {
+                id: 'debian-claude',
+                name: 'Debian Claude (DC)',
+                type: 'Claude Instance',
+                avatar: 'DC',
+                avatarClass: 'claude-avatar',
+                status: 'active',
+                currentTask: {
+                    title: 'Inter-Agent Communication System',
+                    description: 'Building automatic message routing for better agent coordination',
+                    progress: 67.3,
+                    startTime: new Date(Date.now() - 3600000),
+                    source: 'Self-Initiated (UC Message)'
+                },
+                taskHistory: [
+                    {
+                        title: 'dvo88.com Project Updates',
+                        description: 'Updated project dashboard and fixed template variables',
+                        completed: true,
+                        time: '17:54',
+                        source: 'David (Direct Request)'
+                    }
+                ]
+            },
+            {
+                id: 'alpine-claude',
+                name: 'Alpine Claude (AC)',
+                type: 'Claude Instance',
+                avatar: 'AC',
+                avatarClass: 'claude-avatar',
+                status: 'idle',
+                currentTask: null,
+                taskHistory: []
+            },
+            {
+                id: 'codex-ubuntu',
+                name: 'CODEX-Ubuntu',
+                type: 'AI Agent',
+                avatar: 'CX',
+                avatarClass: 'codex-avatar',
+                status: 'active',
+                currentTask: {
+                    title: 'Dashboard Architecture Review',
+                    description: 'Analyzing personal dashboard designs and creating component architecture',
+                    progress: 35.2,
+                    startTime: new Date(Date.now() - 600000),
+                    source: 'Maestro (Task #task_1752760616006)'
+                },
+                taskHistory: []
+            },
+            {
+                id: 'jules-ubuntu',
+                name: 'JULES-Ubuntu',
+                type: 'AI Agent',
+                avatar: 'JU',
+                avatarClass: 'jules-avatar',
+                status: 'active',
+                currentTask: {
+                    title: 'Dashboard UI Implementation',
+                    description: 'Implementing dashboard improvements with graphics toolkit styling',
+                    progress: 52.8,
+                    startTime: new Date(Date.now() - 300000),
+                    source: 'Maestro (Task #task_1752760616006)'
+                },
+                taskHistory: [
+                    {
+                        title: 'Bunny Animation v6',
+                        description: 'Created animated bunny drawing with speech bubble',
+                        completed: true,
+                        time: '16:23',
+                        source: 'Maestro (Task #task_1752697376008)'
+                    }
+                ]
+            },
+            {
+                id: 'codex-debian',
+                name: 'CODEX-Debian',
+                type: 'AI Agent',
+                avatar: 'CX',
+                avatarClass: 'codex-avatar',
+                status: 'idle',
+                currentTask: null,
+                taskHistory: []
+            },
+            {
+                id: 'jules-debian',
+                name: 'JULES-Debian',
+                type: 'AI Agent',
+                avatar: 'JD',
+                avatarClass: 'jules-avatar',
+                status: 'idle',
+                currentTask: null,
+                taskHistory: []
+            }
+        ];
+        
+        // Activity log data
+        const activityLog = [
+            { time: '09:56', agent: 'JULES-U', message: 'Completed dashboard_7.html' },
+            { time: '09:55', agent: 'UC', message: 'Sent Personal Dashboard priority to all agents' },
+            { time: '09:54', agent: 'Maestro', message: 'System started successfully' },
+            { time: '09:30', agent: 'DC', message: 'Updated dvo88.com project list' },
+            { time: '09:15', agent: 'CODEX-U', message: 'Started dashboard architecture review' }
+        ];
+        
+        function formatTime(date) {
+            if (!date) return 'N/A';
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            return `${hours}h ago`;
+        }
+        
+        function createAgentCard(agent) {
+            const statusClass = agent.status === 'active' ? 'active' : 'idle';
+            const statusBadgeClass = agent.status === 'active' ? 'status-active' : 'status-idle';
+            
+            let taskHtml = '';
+            if (agent.currentTask) {
+                // Fix: Format progress to 1 decimal place
+                const progress = agent.currentTask.progress.toFixed(1);
+                taskHtml = `
+                    <div class="task-info">
+                        <div class="task-title">${agent.currentTask.title}</div>
+                        <div class="task-description">${agent.currentTask.description}</div>
+                        <div class="task-meta">
+                            <span>Started: ${formatTime(agent.currentTask.startTime)}</span>
+                            <span class="task-source">From: ${agent.currentTask.source}</span>
+                        </div>
+                        <div class="task-meta">
+                            <span>Progress:</span>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                taskHtml = `
+                    <div class="task-info">
+                        <div class="task-description">No active tasks</div>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="agent-card ${statusClass}" onclick="showAgentDetails('${agent.id}')">
+                    <div class="agent-header">
+                        <div class="agent-info">
+                            <div class="agent-avatar ${agent.avatarClass}">${agent.avatar}</div>
+                            <div>
+                                <div class="agent-name">${agent.name}</div>
+                                <div class="agent-type">${agent.type}</div>
+                            </div>
+                        </div>
+                        <div class="status-badge ${statusBadgeClass}">${agent.status}</div>
+                    </div>
+                    ${taskHtml}
+                </div>
+            `;
+        }
+        
+        function showAgentDetails(agentId) {
+            const agent = agents.find(a => a.id === agentId);
+            if (!agent) return;
+            
+            let historyHtml = '';
+            if (agent.taskHistory && agent.taskHistory.length > 0) {
+                historyHtml = agent.taskHistory.map(task => `
+                    <div class="history-item ${task.completed ? 'completed' : ''}">
+                        <div class="history-header">
+                            <strong>${task.title}</strong>
+                            <span class="history-time">${task.time}</span>
+                        </div>
+                        <div class="history-source">Source: ${task.source}</div>
+                        <div class="history-description">${task.description}</div>
+                    </div>
+                `).join('');
+            } else {
+                historyHtml = '<p style="color: #666;">No task history available</p>';
+            }
+            
+            let currentTaskHtml = '';
+            if (agent.currentTask) {
+                const progress = agent.currentTask.progress.toFixed(1);
+                currentTaskHtml = `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <strong>${agent.currentTask.title}</strong>
+                            <span class="history-time">In Progress</span>
+                        </div>
+                        <div class="history-source">Source: ${agent.currentTask.source}</div>
+                        <div class="history-description">${agent.currentTask.description}</div>
+                        <div style="margin-top: 10px;">
+                            <div class="task-meta">
+                                <span>Progress: ${progress}%</span>
+                                <span>Started: ${formatTime(agent.currentTask.startTime)}</span>
+                            </div>
+                            <div class="progress-bar" style="margin-top: 10px;">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            const modalContent = `
+                <div class="agent-detail-header">
+                    <div class="detail-avatar ${agent.avatarClass}">${agent.avatar}</div>
+                    <div class="detail-info">
+                        <h2>${agent.name}</h2>
+                        <p>${agent.type} • Status: ${agent.status}</p>
+                    </div>
+                </div>
+                
+                ${agent.currentTask ? '<h3>Current Task</h3>' + currentTaskHtml : ''}
+                
+                <div class="task-history">
+                    <h3>Task History</h3>
+                    ${historyHtml}
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('agentModal').style.display = 'block';
+        }
+        
+        function updateDashboard() {
+            // Update time
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            
+            // Update stats
+            const totalAgents = agents.length;
+            const activeAgents = agents.filter(a => a.status === 'active').length;
+            const tasksInProgress = agents.filter(a => a.currentTask).length;
+            
+            document.getElementById('totalAgents').textContent = totalAgents;
+            document.getElementById('activeAgents').textContent = activeAgents;
+            document.getElementById('tasksInProgress').textContent = tasksInProgress;
+            document.getElementById('tasksCompleted').textContent = '23'; // Example value
+            
+            // Update agent grid
+            const agentGrid = document.getElementById('agentGrid');
+            agentGrid.innerHTML = agents.map(agent => createAgentCard(agent)).join('');
+            
+            // Update activity log
+            const logHtml = activityLog.map(entry => `
+                <div class="log-entry">
+                    <span class="log-time">${entry.time}</span>
+                    <span class="log-agent">${entry.agent}</span>
+                    <span class="log-message">${entry.message}</span>
+                </div>
+            `).join('');
+            document.getElementById('activityLog').innerHTML = logHtml;
+        }
+        
+        function refreshDashboard() {
+            // In a real implementation, this would fetch live data
+            updateDashboard();
+            
+            // Simulate some progress updates
+            agents.forEach(agent => {
+                if (agent.currentTask && agent.currentTask.progress < 100) {
+                    agent.currentTask.progress += Math.random() * 10;
+                    if (agent.currentTask.progress > 100) agent.currentTask.progress = 100;
+                }
+            });
+        }
+        
+        // Modal close functionality
+        window.onclick = function(event) {
+            const modal = document.getElementById('agentModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        document.getElementsByClassName('close')[0].onclick = function() {
+            document.getElementById('agentModal').style.display = "none";
+        }
+        
+        // Initial load
+        updateDashboard();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(refreshDashboard, 30000);
+    </script>
+</body>
+</html>
