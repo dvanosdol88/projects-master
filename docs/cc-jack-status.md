@@ -62,3 +62,4 @@ The **JACK** project establishes AI-to-AI communication between:
 - ✅ CLI tool functionality verified
 - ✅ Ready for task execution and coordination
 - 🔜 Awaiting next development phase instructions
+- 📑 See `docs/a2a-system-implementation-roadmap.md` for the migration plan.
