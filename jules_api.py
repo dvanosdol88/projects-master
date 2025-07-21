@@ -1,13 +1,12 @@
 import datetime
 import json
-from pathlib import Path
 
 from flask import Flask, jsonify, request
+from infra.redis_client import client
 
 app = Flask(__name__)
-BASE = Path(__file__).parent
-(BASE / "shared").mkdir(exist_ok=True)
-TASKS_FILE = BASE / "shared" / "tasks.json"
+
+STREAM = "a2a_stream"
 
 
 def _now():
@@ -26,15 +25,21 @@ def add_task():
     if not task:
         return {"error": "task field required"}, 400
 
-    tasks = json.loads(TASKS_FILE.read_text()) if TASKS_FILE.exists() else []
-    tasks.append({"task": task, "created": _now()})
-    TASKS_FILE.write_text(json.dumps(tasks, indent=2))
-    return {"message": f"queued {task!r}", "total_tasks": len(tasks)}, 201
+    client.xadd(STREAM, {"task": task, "created": _now()})
+    return {"message": f"queued {task!r}"}, 201
 
 
 @app.route("/tasks")
 def list_tasks():
-    tasks = json.loads(TASKS_FILE.read_text()) if TASKS_FILE.exists() else []
+    entries = client.xrange(STREAM)
+    tasks = [
+        {
+            "id": entry_id.decode(),
+            "task": fields.get(b"task", b"").decode(),
+            "created": fields.get(b"created", b"").decode(),
+        }
+        for entry_id, fields in entries
+    ]
     return jsonify(tasks)
 
 

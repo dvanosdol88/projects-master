@@ -15,6 +15,10 @@ import sys
 import urllib.request
 import urllib.error
 
+from infra.redis_client import client
+
+STREAM = "a2a_stream"
+
 
 def _post(url: str, payload: dict) -> str:
     data = json.dumps(payload).encode()
@@ -48,7 +52,16 @@ def main() -> None:
                 p.error("'add' requires a task message")
             out = _post(f"{base}/add_task", {"task": a.message})
         elif a.command == "list":
-            out = _get(f"{base}/tasks")
+            entries = client.xrange(STREAM)
+            tasks = [
+                {
+                    "id": eid.decode(),
+                    "task": data.get(b"task", b"").decode(),
+                    "created": data.get(b"created", b"").decode(),
+                }
+                for eid, data in entries
+            ]
+            out = json.dumps(tasks, indent=2)
         else:  # health
             out = _get(f"{base}/health")
         print(out)
