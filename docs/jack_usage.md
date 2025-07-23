@@ -12,6 +12,13 @@ status via `jack_cli.py`.
    ```
 3. On Windows, call `python jack_cli.py` explicitly.
 
+### Environment Variables
+
+`orchestrator.py` reads the following variables when launching Jules:
+
+- `A2A_JULES_PORT` – Port for the Jules server (defaults to 5000).
+- `A2A_TEST_MODE` – When set, logs are written to `orchestrator-test.log`.
+
 ## Adding Tasks
 
 Use `add` to queue a new task:
