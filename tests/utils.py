@@ -4,10 +4,8 @@ import socket
 import subprocess
 import sys
 import time
-from contextlib import contextmanager
-
 import urllib.request
-import json
+from contextlib import contextmanager
 
 
 def get_free_port() -> int:

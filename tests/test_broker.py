@@ -5,7 +5,7 @@ try:
 except Exception:
     fakeredis = None
 
-from message_broker import Broker, StreamConsumer, tasks_retry_total, tasks_dlq_total
+from message_broker import Broker, StreamConsumer, tasks_dlq_total
 
 
 @pytest.mark.unit
