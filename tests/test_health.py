@@ -1,11 +1,10 @@
+import pathlib
 import subprocess
 import sys
-import pathlib
-
-CLI = pathlib.Path(__file__).parent.parent / "jack_cli.py"
-
 
 import pytest
+
+CLI = pathlib.Path(__file__).parent.parent / "jack_cli.py"
 
 
 @pytest.mark.unit
@@ -26,7 +25,7 @@ def test_jules_server_health(live_jules_server):
 
     url = f"http://127.0.0.1:{live_jules_server}/health"
     with urllib.request.urlopen(url) as resp:
-        data = resp.read().decode()
+        _ = resp.read().decode()
     assert resp.status == 200
 
 
@@ -36,5 +35,5 @@ def test_orchestrator_health(live_orchestrator):
 
     url = f"http://127.0.0.1:{live_orchestrator}/health"
     with urllib.request.urlopen(url) as resp:
-        data = resp.read().decode()
+        _ = resp.read().decode()
     assert resp.status == 200
